@@ -1,6 +1,7 @@
-public class ArrayStorage {
+public class ArrayStorage extends AbstractArrayStorage {
     Resume[] storage = new Resume[10000];
 
+    @Override
     void clear() {
         int currentSize = size();
         for (int i = 0; i < currentSize; i++) {
@@ -8,6 +9,7 @@ public class ArrayStorage {
         }
     }
 
+    @Override
     void save(Resume r) {
         if (contains(r)) {
             System.out.println("Resume already exist");
@@ -25,6 +27,7 @@ public class ArrayStorage {
         }
     }
 
+    @Override
     Resume get(String uuid) {
         if (!contains(uuid)) {
             System.out.println("Resume not exist");
@@ -38,6 +41,7 @@ public class ArrayStorage {
         return null;
     }
 
+    @Override
     void delete(String uuid) {
         if (!contains(uuid)) {
             System.out.println("Resume not exist");
@@ -53,6 +57,7 @@ public class ArrayStorage {
         }
     }
 
+    @Override
     Resume[] getAll(){
         Resume[] allResume = new Resume[size()];
         for (int i = 0; i < allResume.length; i++) {
@@ -61,6 +66,7 @@ public class ArrayStorage {
         return allResume;
     }
 
+    @Override
     int size() {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
@@ -70,6 +76,7 @@ public class ArrayStorage {
         return storage.length;
     }
 
+    @Override
     void update(Resume r){
         if (!contains(r)) {
             System.out.println("Resume not exist");
