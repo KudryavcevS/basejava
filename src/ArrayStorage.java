@@ -9,6 +9,14 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
+        if (contains(r)) {
+            System.out.println("Resume already exist");
+            return;
+        }
+        if (size() == 10000){
+            System.out.println("Storage is full");
+            return;
+        }
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
@@ -18,6 +26,10 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
+        if (!contains(uuid)) {
+            System.out.println("Resume not exist");
+            return null;
+        }
         for (int i = 0; i < size(); i++) {
             if (storage[i].toString().equals(uuid)) {
                 return storage[i];
@@ -27,6 +39,10 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        if (!contains(uuid)) {
+            System.out.println("Resume not exist");
+            return;
+        }
         int currentSize = size();
         for (int i = 0; i < currentSize; i++) {
             if (storage[i].toString().equals(uuid)) {
@@ -52,5 +68,34 @@ public class ArrayStorage {
             }
         }
         return storage.length;
+    }
+
+    void update(Resume r){
+        if (!contains(r)) {
+            System.out.println("Resume not exist");
+            return;
+        }
+        int currentSize = size();
+        String uuid = r.toString();
+        for (int i = 0; i < currentSize; i++) {
+            if (storage[i].toString().equals(uuid)) {
+                storage[i] = r;
+                break;
+            }
+        }
+    }
+
+    private boolean contains(String uuid){
+        int currentSize = size();
+        for (int i = 0; i < currentSize; i++) {
+            if (storage[i].toString().equals(uuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean contains(Resume r){
+        return contains(r.toString());
     }
 }
