@@ -2,13 +2,14 @@ public class ArrayStorage {
     Resume[] storage = new Resume[10000];
 
     void clear() {
-        for (int i = 0; i < size(); i++) {
+        int currentSize = size();
+        for (int i = 0; i < currentSize; i++) {
             storage[i] = null;
         }
     }
 
     void save(Resume r) {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
                 break;
@@ -31,6 +32,7 @@ public class ArrayStorage {
             if (storage[i].toString().equals(uuid)) {
                 storage[i] = storage[currentSize - 1];
                 storage[currentSize - 1] = null;
+                break;
             }
         }
     }
