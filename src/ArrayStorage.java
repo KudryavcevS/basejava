@@ -1,39 +1,35 @@
-public class ArrayStorage extends AbstractArrayStorage {
+public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    private int size = 0;
 
-    @Override
     void clear() {
-        int currentSize = size();
-        for (int i = 0; i < currentSize; i++) {
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
+        size = 0;
     }
 
-    @Override
+
     void save(Resume r) {
-        if (contains(r)) {
-            System.out.println("Resume already exist");
-            return;
-        }
-        if (size() == 10000){
+//        if (contains(r.uuid)) {
+//            System.out.println("Resume already exist");
+//            return;
+//        }
+        if (size >= 10000) {
             System.out.println("Storage is full");
             return;
         }
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                storage[i] = r;
-                break;
-            }
-        }
+        storage[size] = r;
+        size++;
     }
 
-    @Override
+
     Resume get(String uuid) {
-        if (!contains(uuid)) {
-            System.out.println("Resume not exist");
-            return null;
-        }
-        for (int i = 0; i < size(); i++) {
+//        if (!contains(uuid)) {
+//            System.out.println("Resume not exist");
+//            return null;
+//        }
+        for (int i = 0; i < size; i++) {
             if (storage[i].toString().equals(uuid)) {
                 return storage[i];
             }
@@ -41,50 +37,41 @@ public class ArrayStorage extends AbstractArrayStorage {
         return null;
     }
 
-    @Override
     void delete(String uuid) {
-        if (!contains(uuid)) {
-            System.out.println("Resume not exist");
-            return;
-        }
-        int currentSize = size();
-        for (int i = 0; i < currentSize; i++) {
+//        if (!contains(uuid)) {
+//            System.out.println("Resume not exist");
+//            return;
+//        }
+        for (int i = 0; i < size; i++) {
             if (storage[i].toString().equals(uuid)) {
-                storage[i] = storage[currentSize - 1];
-                storage[currentSize - 1] = null;
+                storage[i] = storage[size - 1];
+                storage[size - 1] = null;
+                size--;
                 break;
             }
         }
     }
 
-    @Override
-    Resume[] getAll(){
-        Resume[] allResume = new Resume[size()];
-        for (int i = 0; i < allResume.length; i++) {
+    Resume[] getAll() {
+        Resume[] allResume = new Resume[size];
+        for (int i = 0; i < size; i++) {
             allResume[i] = storage[i];
         }
         return allResume;
     }
 
-    @Override
     int size() {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                return i;
-            }
-        }
-        return storage.length;
+        return size;
     }
 
-    @Override
-    void update(Resume r){
-        if (!contains(r)) {
-            System.out.println("Resume not exist");
-            return;
-        }
-        int currentSize = size();
+
+    void update(Resume r) {
+//        if (!contains(r.uuid)) {
+//            System.out.println("Resume not exist");
+//            return;
+//        }
         String uuid = r.toString();
-        for (int i = 0; i < currentSize; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].toString().equals(uuid)) {
                 storage[i] = r;
                 break;
@@ -92,17 +79,12 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    private boolean contains(String uuid){
-        int currentSize = size();
-        for (int i = 0; i < currentSize; i++) {
-            if (storage[i].toString().equals(uuid)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean contains(Resume r){
-        return contains(r.toString());
-    }
+//    private boolean contains(String uuid) {
+//        for (int i = 0; i < size; i++) {
+//            if (storage[i].toString().equals(uuid)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }
