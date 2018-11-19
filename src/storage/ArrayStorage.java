@@ -1,8 +1,10 @@
+package storage;
+
+import model.Resume;
 import java.util.Arrays;
 
-public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
-    private int size = 0;
+
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -11,9 +13,9 @@ public class ArrayStorage {
 
 
     public void save(Resume r) {
-        int index = getIndex(r.uuid);
+        int index = getIndex(r.getUuid());
         if (index == -1) {
-            if (size >= 10000) {
+            if (size == SIZE_LIMIT) {
                 System.out.println("Storage is full");
                 return;
             }
@@ -21,7 +23,7 @@ public class ArrayStorage {
             size++;
             return;
         }
-        System.out.println("ERROR: Resume " + r.uuid + " already exist");
+        System.out.println("ERROR: model.Resume " + r.getUuid() + " already exist");
     }
 
     public Resume get(String uuid) {
@@ -29,17 +31,17 @@ public class ArrayStorage {
         if (index > -1) {
             return storage[index];
         }
-        System.out.println("ERROR: Resume " + uuid + " not exist");
+        System.out.println("ERROR: model.Resume " + uuid + " not exist");
         return null;
     }
 
     public void update(Resume r) {
-        int index = getIndex(r.uuid);
+        int index = getIndex(r.getUuid());
         if (index > -1) {
             storage[index] = r;
             return;
         }
-        System.out.println("ERROR: Resume " + r.uuid + " not exist");
+        System.out.println("ERROR: model.Resume " + r.getUuid() + " not exist");
     }
 
     public void delete(String uuid) {
@@ -50,15 +52,11 @@ public class ArrayStorage {
             size--;
             return;
         }
-        System.out.println("ERROR: Resume " + uuid + " not exist");
+        System.out.println("ERROR: model.Resume " + uuid + " not exist");
     }
 
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
-    }
-
-    public int size() {
-        return size;
     }
 
     private int getIndex(String uuid) {
