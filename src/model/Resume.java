@@ -1,12 +1,26 @@
+package model;
+
 import java.util.Objects;
 
 /**
  * Initial resume class
  */
-public class Resume {
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
-    String uuid;
+    private String uuid;
+
+    public Resume(String uuid){
+        this.uuid = uuid;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     @Override
     public String toString() { return uuid; }
@@ -22,5 +36,10 @@ public class Resume {
     @Override
     public int hashCode() {
         return Objects.hash(uuid);
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        return this.uuid.compareTo(o.getUuid());
     }
 }
