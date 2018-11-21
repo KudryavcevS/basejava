@@ -1,5 +1,7 @@
 package storage;
 
+import exception.ExistStorageException;
+import exception.NotExistStorageException;
 import model.Resume;
 
 import java.util.Arrays;
@@ -17,7 +19,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
-        if (index > 0) System.out.println("ERROR: Resume " + r.getUuid() + " already exist");
+        if (index > 0) throw new ExistStorageException(r.getUuid());
         else if (size == SIZE_LIMIT) System.out.println("Storage is full");
         else {
             insertElem(r, index);
@@ -30,21 +32,20 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("ERROR: Resume " + uuid + " not exist");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         else return storage[index];
     }
 
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
-        if (index < 0) System.out.println("ERROR: Resume " + r.getUuid() + " not exist");
+        if (index < 0) throw new NotExistStorageException(r.getUuid());
         else storage[index] = r;
     }
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index < 0) System.out.println("ERROR: Resume " + uuid + " not exist");
+        if (index < 0) throw new NotExistStorageException(uuid);
         else {
             deleteElem(index);
             storage[size - 1] = null;

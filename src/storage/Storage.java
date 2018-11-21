@@ -2,9 +2,6 @@ package storage;
 
 import model.Resume;
 
-import java.util.Arrays;
-
-
 public interface Storage {
 
     void clear();
