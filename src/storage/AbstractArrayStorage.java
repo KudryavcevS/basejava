@@ -2,6 +2,7 @@ package storage;
 
 import exception.ExistStorageException;
 import exception.NotExistStorageException;
+import exception.StorageException;
 import model.Resume;
 
 import java.util.Arrays;
@@ -20,7 +21,10 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (index > 0) throw new ExistStorageException(r.getUuid());
-        else if (size == SIZE_LIMIT) System.out.println("Storage is full");
+        else if (size == SIZE_LIMIT) {
+            System.out.println("Storage is full");
+            throw new StorageException("Storage is full", r.getUuid());
+        }
         else {
             insertElem(r, index);
             size++;
