@@ -7,7 +7,7 @@ import model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int SIZE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[SIZE_LIMIT];
@@ -18,18 +18,7 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
-    public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index > 0) throw new ExistStorageException(r.getUuid());
-        else if (size == SIZE_LIMIT) {
-            System.out.println("Storage is full");
-            throw new StorageException("Storage is full", r.getUuid());
-        }
-        else {
-            insertElem(r, index);
-            size++;
-        }
-    }
+    public void save(Resume r)
 
     protected abstract void insertElem(Resume r, int index);
 
