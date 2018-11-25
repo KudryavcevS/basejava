@@ -1,9 +1,8 @@
 package storage;
 
-public class SortedArrayStorageTest extends AbstractArrayStorageTest{
+public class SortedArrayStorageTest extends AbstractStorageTest {
 
     static {
         storage = new SortedArrayStorage();
     }
-
 }

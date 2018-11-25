@@ -1,7 +1,5 @@
 package storage;
 
-import exception.ExistStorageException;
-import exception.NotExistStorageException;
 import model.Resume;
 
 import java.util.ArrayList;
@@ -19,8 +17,35 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
+    public int size() {
+        return storage.size();
+    }
+
+    @Override
     public void doSave(Resume r, Object indexKey) {
         storage.put(r.getUuid(), r);
+    }
+
+    @Override
+    public Resume doGet(Object indexKey) {
+        return storage.get(indexKey);
+    }
+
+    @Override
+    public void doUpdate(Resume r, Object indexkey) {
+        storage.replace((String) indexkey, r);
+    }
+
+    @Override
+    public void doDelete(Object indexKey) {
+        storage.remove(indexKey);
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> result = new ArrayList<>(storage.values());
+        result.sort(Resume::compareTo);
+        return result;
     }
 
     @Override
@@ -36,30 +61,4 @@ public class MapStorage extends AbstractStorage {
         return null;
     }
 
-    @Override
-    public Resume doGet(Object indexKey) {
-        return storage.get(indexKey);
-    }
-
-    @Override
-    public void doUpdate(Resume r, Object indexkey) {
-        storage.replace((String) indexkey, r);
-    }
-
-    @Override
-    public void doDelete(Object indexKey) {
-    storage.remove(indexKey);
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>(storage.values());
-        result.sort(Resume::compareTo);
-        return result;
-    }
-
-    @Override
-    public int size() {
-        return storage.size();
-    }
 }

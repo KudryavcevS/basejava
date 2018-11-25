@@ -1,7 +1,5 @@
 package storage;
 
-import exception.ExistStorageException;
-import exception.NotExistStorageException;
 import model.Resume;
 
 import java.util.ArrayList;
@@ -17,8 +15,34 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
+    public int size() {
+        return storage.size();
+    }
+
+    @Override
     public void doSave(Resume r, Object indexKey) {
         storage.add(r);
+    }
+
+    @Override
+    public Resume doGet(Object indexKey) {
+        return storage.get((int) indexKey);
+    }
+
+    @Override
+    public void doUpdate(Resume r, Object indexKey) {
+        storage.set((int) indexKey, r);
+    }
+
+    @Override
+    public void doDelete(Object indexKey) {
+        storage.remove((int) indexKey);
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        storage.sort(Resume::compareTo);
+        return storage;
     }
 
     @Override
@@ -35,29 +59,4 @@ public class ListStorage extends AbstractStorage {
         return -1;
     }
 
-    @Override
-    public Resume doGet(Object indexKey) {
-        return storage.get((int) indexKey);
-    }
-
-    @Override
-    public void doUpdate(Resume r, Object indexKey) {
-        storage.add((int) indexKey, r);
-    }
-
-    @Override
-    public void doDelete(Object indexKey) {
-        storage.remove((int)indexKey);
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        storage.sort(Resume::compareTo);
-        return storage;
-    }
-
-    @Override
-    public int size() {
-        return storage.size();
-    }
 }

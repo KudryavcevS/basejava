@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Objects;
+import java.util.RandomAccess;
 import java.util.UUID;
 
 /**
@@ -9,28 +10,32 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume> {
 
     private final String uuid;
-    private final String fullname;
+    private final String fullName;
 
-    public Resume(){
-        this(UUID.randomUUID().toString(), null);
+    public Resume(String fullName) {
+        this.uuid = UUID.randomUUID().toString();
+        this.fullName = fullName;
     }
 
-    public Resume(String uuid){
-        this.uuid =uuid;
-        fullname = null;
-    }
-
-    public Resume(String uuid, String fullname){
+    public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid is null");
+        Objects.requireNonNull(fullName, "fullName is null");
         this.uuid = uuid;
-        this.fullname = fullname;
+        this.fullName = fullName;
     }
 
     public String getUuid() {
         return uuid;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
     @Override
-    public String toString() { return uuid; }
+    public String toString() {
+        return uuid;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -47,6 +52,7 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int compareTo(Resume o) {
-        return this.uuid.compareTo(o.getUuid());
+        if (this.getFullName().equals(o.getFullName()) && !this.getUuid().equals(o.getUuid())) return this.getUuid().compareTo(o.getUuid());
+        return this.getFullName().compareTo(o.getFullName());
     }
 }
