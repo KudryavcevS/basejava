@@ -21,9 +21,9 @@ public abstract class AbstractArrayStorageTest {
     @Before
     public void setUp() throws Exception {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
+        storage.save(new Resume(UUID_1, null));
+        storage.save(new Resume(UUID_2, null));
+        storage.save(new Resume(UUID_3, null));
     }
 
     @Test
@@ -34,14 +34,14 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void save() {
-        storage.save(new Resume("save check"));
+        storage.save(new Resume("save check", null));
         Assert.assertEquals(4, storage.size());
-        Assert.assertEquals(new Resume("save check"), storage.get("save check"));
+        Assert.assertEquals(new Resume("save check", null), storage.get("save check"));
     }
 
     @Test(expected = ExistStorageException.class)
     public void saveExist() {
-        storage.save(new Resume(UUID_2));
+        storage.save(new Resume(UUID_2, null));
     }
 
     @Test(expected = StorageException.class)
@@ -58,7 +58,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void get() {
-        Assert.assertEquals(storage.get(UUID_2), new Resume(UUID_2));
+        Assert.assertEquals(storage.get(UUID_2), new Resume(UUID_2, null));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -72,7 +72,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(new Resume("ghost"));
+        storage.update(new Resume("ghost", null));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -88,9 +88,9 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void getAll() {
+    public void getAllSorted() {
         Resume[] expected = {new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
-        Assert.assertArrayEquals(expected, storage.getAll());
+        Assert.assertArrayEquals(expected, storage.getAllSorted().toArray());
     }
 
     @Test
