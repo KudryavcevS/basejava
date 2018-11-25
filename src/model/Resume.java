@@ -9,14 +9,15 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume> {
 
     private final String uuid;
-    private String fullname;
+    private final String fullname;
 
     public Resume(){
-        this(UUID.randomUUID().toString());
+        this(UUID.randomUUID().toString(), null);
     }
 
-    public Resume(String uuid){
+    public Resume(String uuid, String fullname){
         this.uuid = uuid;
+        this.fullname = fullname;
     }
 
     public String getUuid() {

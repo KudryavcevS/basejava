@@ -2,6 +2,9 @@ package storage;
 
 import model.Resume;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
@@ -14,12 +17,18 @@ public class ArrayStorage extends AbstractArrayStorage {
         storage[index] = storage[size - 1];
     }
 
-    protected int getIndex(String uuid) {
+    @Override
+    protected Object getIndexKey(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].toString().equals(uuid)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    public List<Resume> getAllSorted(){
+        Arrays.sort(storage);
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 }

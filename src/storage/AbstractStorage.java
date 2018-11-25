@@ -1,33 +1,56 @@
 package storage;
 
 import exception.ExistStorageException;
+import exception.NotExistStorageException;
 import exception.StorageException;
 import model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
 
-
-    public abstract void clear();
-
-    public abstract void save(Resume r){
-        int index = getIndex(r.getUuid());
-        if (index >= 0) throw new ExistStorageException(r.getUuid());
-        else if (size == SIZE_LIMIT) throw new StorageException("Storage is full", r.getUuid());
+    public void save(Resume r) {
+        Object indexKey = getIndexKey(r.getUuid());
+        if (isExist(indexKey)) throw new ExistStorageException(r.getUuid());
         else {
-            insertElem(r, index);
-            size++;
+            doSave(r, indexKey);
         }
     }
 
-    public abstract Resume get(String uuid);
+    protected abstract boolean isExist(Object indexKey);
 
-    public abstract void update(Resume r);
+    protected abstract Object getIndexKey(String uuid);
 
-    public abstract void delete(String uuid);
+    protected abstract void doSave(Resume r, Object indexKey);
 
-    public abstract Resume[] getAll();
 
-    public abstract int size();
+    public Resume get(String uuid) {
+        Object indexKey = getIndexKey(uuid);
+        if (!isExist(indexKey)) throw new NotExistStorageException(uuid);
+        else {
+            return doGet(indexKey);
+        }
+    }
+
+    protected abstract Resume doGet(Object indexKey);
+
+    public void update(Resume r) {
+        Object indexKey = getIndexKey(r.getUuid());
+        if (!isExist(indexKey)) throw new NotExistStorageException(r.getUuid());
+        else {
+            doUpdate(r, indexKey);
+        }
+    }
+
+    protected abstract void doUpdate(Resume r, Object indexKey);
+
+    public void delete(String uuid) {
+        Object indexKey = getIndexKey(uuid);
+        if (!isExist(indexKey)) throw new NotExistStorageException(uuid);
+        else {
+            doDelete(indexKey);
+        }
+    }
+
+    protected abstract void doDelete(Object indexKey);
 
 }

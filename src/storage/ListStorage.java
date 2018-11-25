@@ -1,5 +1,7 @@
 package storage;
 
+import exception.ExistStorageException;
+import exception.NotExistStorageException;
 import model.Resume;
 
 import java.util.ArrayList;
@@ -15,32 +17,47 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void save(Resume r) {
+    public void doSave(Resume r, Object indexKey) {
         storage.add(r);
     }
 
     @Override
-    public Resume get(String uuid) {
-        return storage.get();
+    protected boolean isExist(Object indexKey) {
+        int index = (int) indexKey;
+        return index >= 0;
     }
 
     @Override
-    public void update(Resume r) {
-
+    protected Object getIndexKey(String uuid) {
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) return i;
+        }
+        return -1;
     }
 
     @Override
-    public void delete(String uuid) {
-
+    public Resume doGet(Object indexKey) {
+        return storage.get((int) indexKey);
     }
 
     @Override
-    public Resume[] getAll() {
-        return new Resume[0];
+    public void doUpdate(Resume r, Object indexKey) {
+        storage.add((int) indexKey, r);
+    }
+
+    @Override
+    public void doDelete(Object indexKey) {
+        storage.remove((int)indexKey);
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        storage.sort(Resume::compareTo);
+        return storage;
     }
 
     @Override
     public int size() {
-        return 0;
+        return storage.size();
     }
 }

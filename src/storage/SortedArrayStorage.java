@@ -3,6 +3,7 @@ package storage;
 import model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
@@ -22,7 +23,11 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
+    protected Object getIndexKey(String uuid) {
+        return Arrays.binarySearch(storage, 0, size, new Resume(uuid, null));
+    }
+
+    public List<Resume> getAllSorted(){
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 }
