@@ -29,7 +29,7 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        Arrays.sort(storage);
+        Arrays.sort(storage, Resume::compareTo);
         return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 }
