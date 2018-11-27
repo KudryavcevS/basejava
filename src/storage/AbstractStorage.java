@@ -6,8 +6,11 @@ import model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class AbstractStorage<IK> implements Storage {
+
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     protected abstract List<Resume> getAll();
 
@@ -56,13 +59,19 @@ public abstract class AbstractStorage<IK> implements Storage {
 
     private IK getNotExistedIndexKey(String uuid) {
         IK indexKey = getIndexKey(uuid);
-        if (isExist(indexKey)) throw new ExistStorageException(uuid);
+        if (isExist(indexKey)) {
+            LOG.warning("Resume " + uuid + " already exist");
+            throw new ExistStorageException(uuid);
+        }
         return indexKey;
     }
 
     private IK getExistedIndexKey(String uuid) {
         IK indexKey = getIndexKey(uuid);
-        if (!isExist(indexKey)) throw new NotExistStorageException(uuid);
+        if (!isExist(indexKey)) {
+            LOG.warning("Resume " + uuid + " not exist");
+            throw new NotExistStorageException(uuid);
+        }
         return indexKey;
     }
 
