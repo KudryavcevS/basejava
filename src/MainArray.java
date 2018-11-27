@@ -23,9 +23,9 @@ public class MainArray {
                 System.out.println("Неверная команда.");
                 continue;
             }
-            String parametr = null;
+            String parameter = null;
             if (params.length > 1) {
-                parametr = params[1].intern();
+                parameter = params[1].intern();
             }
             switch (params[0]) {
                 case "list":
@@ -35,23 +35,23 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume(parametr);
+                    r = new Resume(parameter);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
                 case "delete":
-                    ARRAY_STORAGE.delete(parametr);
+                    ARRAY_STORAGE.delete(parameter);
                     printAll();
                     break;
                 case "get":
-                    System.out.println(ARRAY_STORAGE.get(parametr));
+                    System.out.println(ARRAY_STORAGE.get(parameter));
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
                     printAll();
                     break;
                 case "update":
-                    r = new Resume(parametr, params[2]);
+                    r = new Resume(parameter, params[2]);
                     ARRAY_STORAGE.update(r);
                     printAll();
                     break;
@@ -64,7 +64,7 @@ public class MainArray {
         }
     }
 
-    static void printAll() {
+    private static void printAll() {
         Resume[] all = (Resume[]) ARRAY_STORAGE.getAllSorted().toArray();
         System.out.println("----------------------------");
         if (all.length == 0) {

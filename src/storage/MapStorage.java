@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorage extends AbstractStorage<String> {
 
     private Map<String, Resume> storage = new HashMap<>();
 
@@ -22,43 +22,38 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public void doSave(Resume r, Object indexKey) {
+    public void doSave(Resume r, String indexKey) {
         storage.put(r.getUuid(), r);
     }
 
     @Override
-    public Resume doGet(Object indexKey) {
+    public Resume doGet(String indexKey) {
         return storage.get(indexKey);
     }
 
     @Override
-    public void doUpdate(Resume r, Object indexkey) {
-        storage.replace((String) indexkey, r);
+    public void doUpdate(Resume r, String indexKey) {
+        storage.replace(indexKey, r);
     }
 
     @Override
-    public void doDelete(Object indexKey) {
+    public void doDelete(String indexKey) {
         storage.remove(indexKey);
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>(storage.values());
-        result.sort(Resume::compareTo);
-        return result;
+    public List<Resume> getAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
-    protected boolean isExist(Object indexKey) {
-        return indexKey != null;
+    protected boolean isExist(String indexKey) {
+        return storage.containsKey(indexKey);
     }
 
     @Override
-    protected Object getIndexKey(String uuid) {
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getValue().getUuid().equals(uuid)) return entry.getKey();
-        }
-        return null;
+    protected String getIndexKey(String uuid) {
+        return uuid;
     }
 
 }

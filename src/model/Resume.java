@@ -33,25 +33,30 @@ public class Resume implements Comparable<Resume>{
 
     @Override
     public String toString() {
-        return uuid;
+        return uuid + " (" + fullName + ")";
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid);
+
+        if (!uuid.equals(resume.uuid)) return false;
+        return fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
     public int compareTo(Resume o) {
-        if (this.getFullName().equals(o.getFullName()) && !this.getUuid().equals(o.getUuid())) return this.getUuid().compareTo(o.getUuid());
-        return this.getFullName().compareTo(o.getFullName());
+        if (fullName.equals(o.getFullName())) return uuid.compareTo(o.getUuid());
+        return fullName.compareTo(o.getFullName());
     }
 }

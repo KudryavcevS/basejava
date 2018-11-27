@@ -4,48 +4,64 @@ import exception.ExistStorageException;
 import exception.NotExistStorageException;
 import model.Resume;
 
-public abstract class AbstractStorage implements Storage {
+import java.util.Collections;
+import java.util.List;
 
+public abstract class AbstractStorage<IK> implements Storage {
+
+    protected abstract List<Resume> getAll();
+
+    protected abstract boolean isExist(IK indexKey);
+
+    protected abstract IK getIndexKey(String uuid);
+
+    protected abstract void doSave(Resume r, IK indexKey);
+
+    protected abstract Resume doGet(IK indexKey);
+
+    protected abstract void doUpdate(Resume r, IK indexKey);
+
+    protected abstract void doDelete(IK indexKey);
+
+    @Override
     public void save(Resume r) {
-        Object indexKey = getNotExistedIndexKey(r.getUuid());
+        IK indexKey = getNotExistedIndexKey(r.getUuid());
         doSave(r, indexKey);
     }
 
+    @Override
     public Resume get(String uuid) {
-        Object indexKey = getExistedIndexKey(uuid);
+        IK indexKey = getExistedIndexKey(uuid);
         return doGet(indexKey);
     }
 
+    @Override
     public void update(Resume r) {
-        Object indexKey = getExistedIndexKey(r.getUuid());
+        IK indexKey = getExistedIndexKey(r.getUuid());
         doUpdate(r, indexKey);
     }
 
+    @Override
     public void delete(String uuid) {
-        Object indexKey = getExistedIndexKey(uuid);
+        IK indexKey = getExistedIndexKey(uuid);
         doDelete(indexKey);
     }
 
-    protected abstract boolean isExist(Object indexKey);
+    @Override
+    public List<Resume> getAllSorted(){
+        List<Resume> result = getAll();
+        Collections.sort(result);
+        return result;
+    }
 
-    protected abstract Object getIndexKey(String uuid);
-
-    protected abstract void doSave(Resume r, Object indexKey);
-
-    protected abstract Resume doGet(Object indexKey);
-
-    protected abstract void doUpdate(Resume r, Object indexKey);
-
-    protected abstract void doDelete(Object indexKey);
-
-    private Object getNotExistedIndexKey(String uuid) {
-        Object indexKey = getIndexKey(uuid);
+    private IK getNotExistedIndexKey(String uuid) {
+        IK indexKey = getIndexKey(uuid);
         if (isExist(indexKey)) throw new ExistStorageException(uuid);
         return indexKey;
     }
 
-    private Object getExistedIndexKey(String uuid) {
-        Object indexKey = getIndexKey(uuid);
+    private IK getExistedIndexKey(String uuid) {
+        IK indexKey = getIndexKey(uuid);
         if (!isExist(indexKey)) throw new NotExistStorageException(uuid);
         return indexKey;
     }

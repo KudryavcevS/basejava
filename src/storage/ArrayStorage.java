@@ -18,18 +18,12 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected Object getIndexKey(String uuid) {
+    protected Integer getIndexKey(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].toString().equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
         return -1;
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        Arrays.sort(storage, Resume::compareTo);
-        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 }
