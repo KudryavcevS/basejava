@@ -6,19 +6,37 @@ import java.util.Objects;
 public class Organization {
 
     private final Link orgHomePage;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String title;
-    private final String description;
+    private List<Period> periods = new ArrayList<>();    
 
-    public Organization(String orgName, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
-        Objects.requireNonNull(startDate, "start date is null");
-        Objects.requireNonNull(title, "title is null");
+    public Organization(String orgName, String url, Period... periods) {
         this.orgHomePage = new Link(orgName, url);
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.title = title;
-        this.description = description;
+        this.periods = Arrays.asList(periods);
+    }
+    
+    public Organization(String orgName, String url, List<Period> periods) {
+        this.orgHomePage = new Link(orgName, url);
+        this.periods = periods;
+    }
+   
+    public static class Period {
+        private final LocalDate startDate;
+        private final LocalDate endDate;
+        private final String title;
+        private final String description;
+        
+        public Period(LocalDate startDate, LocalDate endDate, String title, String description){
+            Objects.requireNonNull(startDate, "start date is null");
+            Objects.requireNonNull(title, "title is null");
+            Objects.requireNonNull(endDate, "endDate is null")
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.title = title;
+            this.description = description;
+        }
+        
+        public Period(LocalDate startDate, String title, String description){
+            this(startDate, NOW, title, description);
+        }
     }
 
     @Override
