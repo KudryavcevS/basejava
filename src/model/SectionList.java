@@ -1,11 +1,16 @@
 package model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class SectionList extends Section {
 
     private final List<String> items;
+
+    public SectionList(String... items) {
+        this(Arrays.asList(items));
+    }
 
     public SectionList(List<String> items) {
         Objects.requireNonNull(items, "items list is empty");
