@@ -1,15 +1,22 @@
-import java.io.File
+import java.io.File;
 
 public class MainFile {
 
     public static void main (String[] args){
-    
-        public printAllFileName(String path){
-            File sourse = new File(source);
-            for (File file : source.listFiles()){
-                if (file.isDirectory()) printAllFileName(file.getPath())
-                else System.out.println(file.getName);
-             }
+
+        printAllFileName("C:\\Users\\matt\\basejava\\src");
+
+    }
+
+    public static void printAllFileName(String path){
+        File source = new File(path);
+        for (File file : source.listFiles()){
+            if (file.isDirectory()) {
+                System.out.println("-----------------------\nDIRECTORY^ " + file.getName() + " ->");
+                printAllFileName(file.getPath());
+                System.out.println("-----------------------");
+            }
+            else System.out.println(file.getName());
         }
     }
 }
