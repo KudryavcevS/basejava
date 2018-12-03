@@ -12,8 +12,7 @@ public class Organization {
     private List<Period> periods = new ArrayList<>();
 
     public Organization(String orgName, String url, Period... periods) {
-        this.orgHomePage = new Link(orgName, url);
-        this.periods = Arrays.asList(periods);
+        this(orgName, url, Arrays.asList(periods));
     }
     
     public Organization(String orgName, String url, List<Period> periods) {
