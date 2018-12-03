@@ -3,10 +3,13 @@ package storage;
 import exception.ExistStorageException;
 import exception.NotExistStorageException;
 import exception.StorageException;
-import model.Resume;
+import model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.time.LocalDate;
+import java.time.Month;
 
 public abstract class AbstractStorageTest {
 
@@ -15,12 +18,36 @@ public abstract class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
 
+    private static final Resume RESUME_1 = new Resume(UUID_1, "name1");
+    private static final Resume RESUME_2 = new Resume(UUID_2, "name2");
+    private static final Resume RESUME_3 = new Resume(UUID_3, "name3");
+
+    static {
+        RESUME_1.addContact(ContactType.PHONE, "phone from resume1");
+        RESUME_1.addContact(ContactType.MAIL, "mail from resume1");
+        RESUME_1.addSections(SectionType.PERSONAL, new SectionText("personal from resume1"));
+        RESUME_1.addSections(SectionType.ACHIEVEMENT, new SectionList("achievement1 from resume1","achievement2 from resume1"));
+        RESUME_1.addSections(SectionType.QUALIFICATIONS, new SectionList("qualification1 from resume1","qualification2 from resume1" ));
+        RESUME_1.addSections(SectionType.EDUCATION, new SectionOrg(
+                new Organization("org1 from resume1", "url1 from resume1",
+                new Organization.Period(LocalDate.of(2007, Month.APRIL, 1), LocalDate.of(2008, Month.JANUARY, 1),"periodName1 from resume1", "desc1 from resume1" ),
+                new Organization.Period(LocalDate.of(2008, Month.SEPTEMBER,1), "periodName2 from resume1", "desc2 from resume1" ))));
+        RESUME_1.addSections(SectionType.EXPERIENCE, new SectionOrg(
+                new Organization("org2 from resume1", "url2 from resume1",
+                new Organization.Period(LocalDate.of(2009, Month.APRIL, 1), LocalDate.of(2015, Month.JANUARY, 1),"periodName3 from resume1", null)),
+                new Organization("org3 from resume1", "url3 from resume1",
+                new Organization.Period(LocalDate.of(2009, Month.APRIL, 1), LocalDate.of(2015, Month.JANUARY, 1),"periodName4 from resume1", null))));
+
+        RESUME_2.addContact(ContactType.PHONE, "phone from resume2");
+        RESUME_2.addContact(ContactType.MAIL, "mail from resume2");
+    }
+
     @Before
     public void setUp() {
         storage.clear();
-        storage.save(new Resume(UUID_1, "name1"));
-        storage.save(new Resume(UUID_2, "name2"));
-        storage.save(new Resume(UUID_3, "name3"));
+        storage.save(RESUME_1);
+        storage.save(RESUME_2);
+        storage.save(RESUME_3);
     }
 
     @Test
