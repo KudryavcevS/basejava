@@ -63,10 +63,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
     @Override
     protected void doSave(Resume r, File indexKey) {
         try {
-            indexKey.createNewFile();
+            if (!indexKey.createNewFile()) throw new StorageException("ERROR: cannot create file" + indexKey.getPath(), indexKey.getName());
             doWrite(r, indexKey);
         } catch (IOException e) {
-            throw new StorageException("Cannot write file" + indexKey.getPath(), indexKey.getName(), e);
+            throw new StorageException("ERROR: cannot write file" + indexKey.getPath(), indexKey.getName(), e);
         }
     }
  
@@ -84,7 +84,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
         try {
             doWrite(r, indexKey);
         } catch (IOException e) {
-            throw new StorageException("IOException", indexKey.getName(), e);
+            throw new StorageException("ERROR: cannot write file" + indexKey.getPath(), indexKey.getName(), e);
         }
     }
 
