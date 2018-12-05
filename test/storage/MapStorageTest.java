@@ -8,8 +8,4 @@ public class MapStorageTest extends AbstractStorageTest {
         storage = new MapStorage();
     }
 
-    @Ignore
-    @Test
-    public void saveIsFull() {
-    }
 }

@@ -8,12 +8,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
 
 public abstract class AbstractStorageTest {
 
     protected static Storage storage;
+    protected static final File STORAGEDIR = new File("C:\\Users\\matt\\basejava\\src\\storage\\storageDir");
+
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
@@ -69,17 +72,6 @@ public abstract class AbstractStorageTest {
         storage.save(new Resume(UUID_2, "name2"));
     }
 
-    @Test(expected = StorageException.class)
-    public void saveIsFull() {
-        try {
-            for (int i = 4; i <= AbstractArrayStorage.SIZE_LIMIT; i++) {
-                storage.save(new Resume("ghost" + i));
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
-        storage.save(new Resume("saveIsFull"));
-    }
 
     @Test
     public void get() {

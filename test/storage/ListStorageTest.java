@@ -8,8 +8,4 @@ public class ListStorageTest extends AbstractStorageTest {
         storage = new ListStorage();
     }
 
-    @Ignore
-    @Test
-    public void saveIsFull() {
-    }
 }
