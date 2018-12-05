@@ -3,8 +3,7 @@ package storage;
 import exception.StorageException;
 import model.Resume;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,9 +19,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
         storage = dir;
     }
 
-    protected abstract void doWrite(Resume r, File indexKey) throws IOException;
+    protected abstract void doWrite(Resume r, OutputStream outputStream) throws IOException;
 
-    protected abstract Resume doRead(File indexKey) throws IOException;
+    protected abstract Resume doRead(InputStream inputStream) throws IOException;
 
     @Override
     public void clear() {
@@ -64,7 +63,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
     protected void doSave(Resume r, File indexKey) {
         try {
             if (!indexKey.createNewFile()) throw new StorageException("ERROR: cannot create file" + indexKey.getPath(), indexKey.getName());
-            doWrite(r, indexKey);
+            doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey)));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot write file" + indexKey.getPath(), indexKey.getName(), e);
         }
@@ -73,7 +72,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
     @Override
     protected Resume doGet(File indexKey) {
         try {
-            return doRead(indexKey);
+            return doRead(new BufferedInputStream(new FileInputStream(indexKey)));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot read file", indexKey.getName(), e);
         }
@@ -82,7 +81,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
     @Override
     protected void doUpdate(Resume r, File indexKey) {
         try {
-            doWrite(r, indexKey);
+            doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey)));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot write file" + indexKey.getPath(), indexKey.getName(), e);
         }
