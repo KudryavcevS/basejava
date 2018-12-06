@@ -15,7 +15,7 @@ import java.time.Month;
 public abstract class AbstractStorageTest {
 
     protected static Storage storage;
-    protected static final File STORAGEDIR = new File("C:\\Users\\matt\\basejava\\src\\storage\\storageDir");
+    protected static final String STORAGEDIR = "C:\\Users\\matt\\basejava\\src\\storage\\storageDir";
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
