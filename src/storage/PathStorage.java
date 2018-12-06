@@ -11,23 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
 
     private Path storage;
+    private StreamSerializable strategy;
 
-    public AbstractPathStorage(String dir) {
-        storage = Paths.get(dir);
+    public PathStorage(String dir, StreamSerializable strategy) {
         Objects.requireNonNull(dir, "directory is null");
+        storage = Paths.get(dir);
         if (!Files.isDirectory(storage))
             throw new IllegalArgumentException(storage.toAbsolutePath() + "is not directory");
         if (!Files.isReadable(storage) || !Files.isWritable(storage))
             throw new IllegalArgumentException(storage.toAbsolutePath() + "is not (read/write)able");
-
+        this.strategy = strategy;
     }
-
-    protected abstract void doWrite(Resume r, OutputStream outputStream) throws IOException;
-
-    protected abstract Resume doRead(InputStream inputStream) throws IOException;
 
     @Override
     public void clear() {
@@ -72,7 +69,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected void doSave(Resume r, Path indexKey) {
         try {
             Files.createFile(indexKey);
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey.toFile())));
+            strategy.doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey.toFile())));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot write file" + indexKey, indexKey.getFileName().toString(), e);
         }
@@ -81,7 +78,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path indexKey) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(indexKey.toFile())));
+            return strategy.doRead(new BufferedInputStream(new FileInputStream(indexKey.toFile())));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot read file", indexKey.getFileName().toString(), e);
         }
@@ -90,9 +87,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume r, Path indexKey) {
         try {
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey.toFile())));
+            strategy.doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey.toFile())));
         } catch (IOException e) {
-            throw new StorageException("ERROR: cannot write file" , r.getUuid(), e);
+            throw new StorageException("ERROR: cannot write file", r.getUuid(), e);
         }
     }
 

@@ -8,20 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File>  {
+public class FileStorage extends AbstractStorage<File> {
 
     private File storage;
+    private StreamSerializable strategy;
 
-    public AbstractFileStorage(File dir){
+    public FileStorage(File dir, StreamSerializable strategy) {
         Objects.requireNonNull(dir, "directory is null");
         if (!dir.isDirectory()) throw new IllegalArgumentException(dir.getPath() + "is not directory");
-        if (!dir.canRead() || !dir.canWrite()) throw new IllegalArgumentException(dir.getPath() + "is not (read/write)able");
+        if (!dir.canRead() || !dir.canWrite())
+            throw new IllegalArgumentException(dir.getPath() + "is not (read/write)able");
         storage = dir;
+        this.strategy = strategy;
     }
-
-    protected abstract void doWrite(Resume r, OutputStream outputStream) throws IOException;
-
-    protected abstract Resume doRead(InputStream inputStream) throws IOException;
 
     @Override
     public void clear() {
@@ -62,17 +61,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
     @Override
     protected void doSave(Resume r, File indexKey) {
         try {
-            if (!indexKey.createNewFile()) throw new StorageException("ERROR: cannot create file" + indexKey.getPath(), indexKey.getName());
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey)));
+            if (!indexKey.createNewFile())
+                throw new StorageException("ERROR: cannot create file" + indexKey.getPath(), indexKey.getName());
+            strategy.doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey)));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot write file" + indexKey.getPath(), indexKey.getName(), e);
         }
     }
- 
+
     @Override
     protected Resume doGet(File indexKey) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(indexKey)));
+            return strategy.doRead(new BufferedInputStream(new FileInputStream(indexKey)));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot read file", indexKey.getName(), e);
         }
@@ -81,7 +81,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
     @Override
     protected void doUpdate(Resume r, File indexKey) {
         try {
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey)));
+            strategy.doWrite(r, new BufferedOutputStream(new FileOutputStream(indexKey)));
         } catch (IOException e) {
             throw new StorageException("ERROR: cannot write file" + indexKey.getPath(), indexKey.getName(), e);
         }
