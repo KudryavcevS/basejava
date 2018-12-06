@@ -37,14 +37,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File>  {
         if (fileNames != null) {
             return fileNames.length;
         }
-        throw new StorageException("ERROR: cannot get file names from directory: ", null);
+        throw new StorageException("ERROR: cannot get file names from directory: ");
     }
 
     @Override
     protected List<Resume> getAll() {
         List<Resume> result = new ArrayList<>();
         File[] files = storage.listFiles();
-        if (files == null) throw new StorageException("ERROR: cannot get files from directory: ", null);
+        if (files == null) throw new StorageException("ERROR: cannot get files from directory: ");
         for (File file : files) result.add(doGet(file));
         return result;
     }
