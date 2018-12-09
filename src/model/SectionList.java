@@ -7,7 +7,7 @@ import java.util.Objects;
 public class SectionList extends Section {
     private static final long serialVersionUID = 1L;
 
-    private final List<String> items;
+    private List<String> items;
 
     public SectionList(String... items) {
         this(Arrays.asList(items));
@@ -17,6 +17,8 @@ public class SectionList extends Section {
         Objects.requireNonNull(items, "items list is empty");
         this.items = items;
     }
+
+    public SectionList() { }
 
     public List<String> getItems() {
         return items;

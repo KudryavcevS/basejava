@@ -5,12 +5,14 @@ import java.util.Objects;
 public class SectionText extends Section {
     private static final long serialVersionUID = 1L;
 
-    private final String content;
+    private String content;
 
     public SectionText(String content) {
         Objects.requireNonNull(content, "content is empty");
         this.content = content;
     }
+
+    public SectionText() {}
 
     public String getContent() {
         return content;
@@ -22,7 +24,6 @@ public class SectionText extends Section {
         if (o == null || getClass() != o.getClass()) return false;
 
         SectionText that = (SectionText) o;
-
         return content.equals(that.content);
     }
 

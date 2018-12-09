@@ -1,5 +1,7 @@
 package storage;
 
+import storage.serializable.ObjectStreamSerializer;
+
 import java.io.File;
 
 public class ObjectFileStorageTest extends AbstractStorageTest {

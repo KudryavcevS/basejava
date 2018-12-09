@@ -1,5 +1,10 @@
 package model;
 
+import storage.serializable.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,19 +12,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final Link orgHomePage;
+    private Link orgHomePage;
     private List<Period> periods = new ArrayList<>();
 
     public Organization(String orgName, String url, Period... periods) {
         this(orgName, url, Arrays.asList(periods));
     }
-    
+
     public Organization(String orgName, String url, List<Period> periods) {
         this.orgHomePage = new Link(orgName, url);
         this.periods = periods;
+    }
+
+    public Organization() {
     }
 
     @Override
@@ -48,13 +57,16 @@ public class Organization implements Serializable {
                 '}';
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String title;
-        private final String description;
-        
-        public Period(LocalDate startDate, LocalDate endDate, String title, String description){
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate startDate;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate endDate;
+        private String title;
+        private String description;
+
+        public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
             Objects.requireNonNull(startDate, "start date is null");
             Objects.requireNonNull(title, "title is null");
             Objects.requireNonNull(endDate, "endDate is null");
@@ -63,9 +75,12 @@ public class Organization implements Serializable {
             this.title = title;
             this.description = description;
         }
-        
-        public Period(LocalDate startDate, String title, String description){
+
+        public Period(LocalDate startDate, String title, String description) {
             this(startDate, LocalDate.now(), title, description);
+        }
+
+        public Period() {
         }
 
         @Override

@@ -7,7 +7,7 @@ import java.util.Objects;
 public class SectionOrg extends Section {
     private static final long serialVersionUID = 1L;
 
-    private final List<Organization> organizations;
+    private List<Organization> organizations;
 
     public SectionOrg(Organization... organizations) {
         this(Arrays.asList(organizations));
@@ -17,6 +17,8 @@ public class SectionOrg extends Section {
         Objects.requireNonNull(organizations, "organizations list is empty");
         this.organizations = organizations;
     }
+
+    public SectionOrg() { }
 
     public List<Organization> getOrganizations() {
         return organizations;
