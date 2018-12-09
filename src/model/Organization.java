@@ -1,6 +1,6 @@
 package model;
 
-import storage.serializable.LocalDateAdapter;
+import storage.serializable.LocalDateXMLAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -59,9 +59,9 @@ public class Organization implements Serializable {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
-        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        @XmlJavaTypeAdapter(LocalDateXMLAdapter.class)
         private LocalDate startDate;
-        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        @XmlJavaTypeAdapter(LocalDateXMLAdapter.class)
         private LocalDate endDate;
         private String title;
         private String description;
