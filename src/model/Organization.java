@@ -31,6 +31,14 @@ public class Organization implements Serializable {
     public Organization() {
     }
 
+    public Link getOrgHomePage() {
+        return orgHomePage;
+    }
+
+    public List<Period> getPeriods() {
+        return periods;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,6 +89,22 @@ public class Organization implements Serializable {
         }
 
         public Period() {
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         @Override
