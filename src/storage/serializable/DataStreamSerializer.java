@@ -51,7 +51,9 @@ public class DataStreamSerializer implements StreamSerializable {
                             writer.writeUTF(period.getStartDate().toString());
                             writer.writeUTF(period.getEndDate().toString());
                             writer.writeUTF(period.getTitle());
-                            writer.writeUTF(period.getDescription());
+                            if (period.getDescription() != null) {
+                                writer.writeUTF(period.getDescription());
+                            }
                         }
                     }
                 }
@@ -104,7 +106,7 @@ public class DataStreamSerializer implements StreamSerializable {
                         }
                         organizations.add(new Organization(name, url, periods));
                     }
-                    result.addSections(sectionType,new SectionOrg(organizations));
+                    result.addSections(sectionType, new SectionOrg(organizations));
                 }
             }
             return result;
