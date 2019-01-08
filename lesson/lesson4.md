@@ -25,4 +25,4 @@
 
 ## Домашнее задание
 Реализовать `AbstractStorageTest` и тесты `ArrayStorageTest` и `SortedArrayStorageTest`.
-В `MainReflection` сделать вызов метода `toString` через отражение.
+В `com.webapp.MainReflection` сделать вызов метода `toString` через отражение.
