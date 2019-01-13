@@ -1,76 +1,88 @@
 package com.webapp.storage;
 
 import com.webapp.exception.NotExistStorageException;
-import com.webapp.exception.StorageException;
 import com.webapp.model.Resume;
-import com.webapp.sql.ConnectionFactory;
+import com.webapp.sql.SqlHelper;
 
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqlStorage implements Storage {
 
-    public final ConnectionFactory connectionFactory;
+    private SqlHelper sqlHelper;
 
     public SqlStorage(String url, String user, String password) {
-        connectionFactory = () -> DriverManager.getConnection(url, user, password);
+        sqlHelper = new SqlHelper(() -> DriverManager.getConnection(url, user, password));
     }
 
     @Override
     public void clear() {
-        try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM resume")) {
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-
+        sqlHelper.sqlAction("DELETE FROM resume", PreparedStatement::execute);
     }
 
     @Override
     public void save(Resume r) {
-        try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
-            preparedStatement.setString(1 , r.getUuid());
-            preparedStatement.setString(2 , r.getFullName());
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
+        sqlHelper.sqlAction("INSERT INTO resume (uuid, full_name) VALUES (?,?)", preparedStatement -> {
+            preparedStatement.setString(1, r.getUuid());
+            preparedStatement.setString(2, r.getFullName());
+            return preparedStatement.execute();
+        });
     }
 
     @Override
     public Resume get(String uuid) {
-        try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")) {
-            preparedStatement.setString(1 , uuid);
+        return sqlHelper.sqlAction("SELECT * FROM resume r WHERE r.uuid =?", preparedStatement -> {
+            preparedStatement.setString(1, uuid);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
-                 throw new NotExistStorageException(uuid);
+                throw new NotExistStorageException(uuid);
             }
             return new Resume(uuid, resultSet.getString("full_name"));
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
+        });
     }
 
     @Override
     public void update(Resume r) {
-
+        sqlHelper.sqlAction("UPDATE resume r SET r.full_name =? WHERE r.uuid =?", preparedStatement -> {
+            preparedStatement.setString(1, r.getFullName());
+            preparedStatement.setString(2, r.getUuid());
+            return preparedStatement.execute();
+        });
     }
 
     @Override
     public void delete(String uuid) {
+        sqlHelper.sqlAction("DELETE FROM resume r WHERE r.uuid =?", preparedStatement -> {
+            preparedStatement.setString(1, uuid);
+            return preparedStatement.execute();
+        });
 
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        return null;
+        return sqlHelper.sqlAction("SELECT * FROM resume", preparedStatement -> {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Resume> result = new ArrayList<>();
+            while (resultSet.next()) {
+
+            }
+            return result;
+        });
     }
 
     @Override
     public int size() {
-        return 0;
+        return sqlHelper.sqlAction("SELECT COUNT(uuid) FROM resume", preparedStatement -> {
+            ResultSet resultSet = preparedStatement.getResultSet();
+            int result = 0;
+            while (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+            return result;
+        });
     }
 }
