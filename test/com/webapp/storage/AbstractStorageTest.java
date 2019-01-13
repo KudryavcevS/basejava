@@ -8,20 +8,20 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.UUID;
 
 public abstract class AbstractStorageTest {
 
     protected static Storage storage;
-/* protected static final File STORAGEDIR = new File("C:/Users/matt/basejava/src/com/webapp/storage/storageDir"); */
-    protected static final File STORAGEDIR = MainConfig.get().getStorageDir();
+    static final File STORAGEDIR = MainConfig.get().getStorageDir();
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
 
     private static final Resume RESUME_1 = new Resume(UUID_1, "name1");
     private static final Resume RESUME_2 = new Resume(UUID_2, "name2");
@@ -31,17 +31,17 @@ public abstract class AbstractStorageTest {
         RESUME_1.addContact(ContactType.PHONE, "phone from resume1");
         RESUME_1.addContact(ContactType.MAIL, "mail from resume1");
         RESUME_1.addSections(SectionType.PERSONAL, new SectionText("personal from resume1"));
-        RESUME_1.addSections(SectionType.ACHIEVEMENT, new SectionList("achievement1 from resume1","achievement2 from resume1"));
-        RESUME_1.addSections(SectionType.QUALIFICATIONS, new SectionList("qualification1 from resume1","qualification2 from resume1" ));
+        RESUME_1.addSections(SectionType.ACHIEVEMENT, new SectionList("achievement1 from resume1", "achievement2 from resume1"));
+        RESUME_1.addSections(SectionType.QUALIFICATIONS, new SectionList("qualification1 from resume1", "qualification2 from resume1"));
         RESUME_1.addSections(SectionType.EDUCATION, new SectionOrg(
                 new Organization("org1 from resume1", "url1 from resume1",
-                new Organization.Period(LocalDate.of(2007, Month.APRIL, 1), LocalDate.of(2008, Month.JANUARY, 1),"periodName1 from resume1", "desc1 from resume1" ),
-                new Organization.Period(LocalDate.of(2008, Month.SEPTEMBER,1), "periodName2 from resume1", "desc2 from resume1" ))));
+                        new Organization.Period(LocalDate.of(2007, Month.APRIL, 1), LocalDate.of(2008, Month.JANUARY, 1), "periodName1 from resume1", "desc1 from resume1"),
+                        new Organization.Period(LocalDate.of(2008, Month.SEPTEMBER, 1), "periodName2 from resume1", "desc2 from resume1"))));
         RESUME_1.addSections(SectionType.EXPERIENCE, new SectionOrg(
                 new Organization("org2 from resume1", "url2 from resume1",
-                new Organization.Period(LocalDate.of(2009, Month.APRIL, 1), LocalDate.of(2015, Month.JANUARY, 1),"periodName3 from resume1", null)),
+                        new Organization.Period(LocalDate.of(2009, Month.APRIL, 1), LocalDate.of(2015, Month.JANUARY, 1), "periodName3 from resume1", null)),
                 new Organization("org3 from resume1", "url3 from resume1",
-                new Organization.Period(LocalDate.of(2009, Month.APRIL, 1), LocalDate.of(2015, Month.JANUARY, 1),"periodName4 from resume1", null))));
+                        new Organization.Period(LocalDate.of(2009, Month.APRIL, 1), LocalDate.of(2015, Month.JANUARY, 1), "periodName4 from resume1", null))));
 
         RESUME_2.addContact(ContactType.PHONE, "phone from resume2");
         RESUME_2.addContact(ContactType.MAIL, "mail from resume2");
@@ -63,10 +63,10 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume resumeForSave = new Resume("uuid4","save check");
+        Resume resumeForSave = new Resume(UUID_4, "save check");
         storage.save(resumeForSave);
         Assert.assertEquals(4, storage.size());
-        Assert.assertEquals(resumeForSave, storage.get("uuid4"));
+        Assert.assertEquals(resumeForSave, storage.get(UUID_4));
     }
 
     @Test(expected = ExistStorageException.class)
@@ -87,9 +87,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updateResume = new Resume("uuid2", "update");
+        Resume updateResume = new Resume(UUID_2, "update");
         storage.update(updateResume);
-        Assert.assertEquals(updateResume, storage.get("uuid2"));
+        Assert.assertEquals(updateResume, storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)

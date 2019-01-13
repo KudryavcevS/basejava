@@ -46,29 +46,31 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        sqlHelper.sqlAction("UPDATE resume r SET r.full_name =? WHERE r.uuid =?", preparedStatement -> {
+        sqlHelper.sqlAction("UPDATE resume SET full_name =? WHERE uuid =?", preparedStatement -> {
             preparedStatement.setString(1, r.getFullName());
             preparedStatement.setString(2, r.getUuid());
-            return preparedStatement.execute();
+            if (preparedStatement.executeUpdate() == 0) throw new NotExistStorageException(r.getUuid());
+            return true;
         });
     }
 
     @Override
     public void delete(String uuid) {
-        sqlHelper.sqlAction("DELETE FROM resume r WHERE r.uuid =?", preparedStatement -> {
+        sqlHelper.sqlAction("DELETE FROM resume WHERE uuid =?", preparedStatement -> {
             preparedStatement.setString(1, uuid);
-            return preparedStatement.execute();
+            if (preparedStatement.executeUpdate() == 0) throw new NotExistStorageException(uuid);
+            return true;
         });
 
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.sqlAction("SELECT * FROM resume", preparedStatement -> {
+        return sqlHelper.sqlAction("SELECT * FROM resume ORDER BY full_name, uuid", preparedStatement -> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> result = new ArrayList<>();
             while (resultSet.next()) {
-
+                result.add(new Resume(resultSet.getString("uuid"), resultSet.getString("full_name")));
             }
             return result;
         });
@@ -76,13 +78,9 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return sqlHelper.sqlAction("SELECT COUNT(uuid) FROM resume", preparedStatement -> {
-            ResultSet resultSet = preparedStatement.getResultSet();
-            int result = 0;
-            while (resultSet.next()) {
-                result = resultSet.getInt(1);
-            }
-            return result;
+        return sqlHelper.sqlAction("SELECT COUNT(*) FROM resume", preparedStatement -> {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? resultSet.getInt(1) : 0;
         });
     }
 }
